@@ -1,17 +1,28 @@
+import 'package:example_register/utils/fonts.dart';
 import 'package:example_register/widgets/list/list_button_social_media.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class RegisterPage extends StatelessWidget {
-  final fullNameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-
+class RegisterPage extends StatefulWidget {
   RegisterPage({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final fullNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  bool _isObscure = true;
+
+  String fullName = "";
+  String email = ""; // ? no null si desean
+  String password = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,89 +42,212 @@ class RegisterPage extends StatelessWidget {
                 subUnderTitleRegister(),
               ]),
               SizedBox(height: 35),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Full Name"),
-                  SizedBox(height: 10),
-                  Container(
-                      width: 350,
-                      height: 53,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8)),
-                      child: TextFormField(
-                        controller: fullNameController,
-                        decoration: InputDecoration(
-                            hintText: "Enter your fullname",
-                            border: InputBorder.none,
-                            focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.blueAccent)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.grey.shade100)),
-                            hintStyle: GoogleFonts.nunito(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey)),
-                      )),
-                  SizedBox(height: 20),
-                  Text("Email"),
-                  SizedBox(height: 10),
-                  Container(
-                      width: 350,
-                      height: 53,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8)),
-                      child: TextFormField(
-                        controller: emailController,
-                        decoration: InputDecoration(
-                            hintText: "Enter your email",
-                            border: InputBorder.none,
-                            focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.blueAccent)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.grey.shade100)),
-                            hintStyle: GoogleFonts.nunito(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey)),
-                      )),
-                  SizedBox(height: 20),
-                  Text("Password"),
-                  SizedBox(height: 10),
-                  Container(
-                      width: 350,
-                      height: 53,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey, width: 1.5),
-                          borderRadius: BorderRadius.circular(8)),
-                      child: TextFormField(
-                        controller: passwordController,
-                        decoration: InputDecoration(
-                            hintText: "Enter your password",
-                            border: InputBorder.none,
-                            focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.blueAccent)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.grey.shade100)),
-                            hintStyle: GoogleFonts.nunito(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey)),
-                      )),
-                ],
+              Form(
+                autovalidateMode: AutovalidateMode.always,
+                onChanged: () {
+                  Form.of(primaryFocus!.context!)!.save();
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    inputFullName(),
+                    SizedBox(height: 20),
+                    inputEmail(),
+                    SizedBox(height: 20),
+                    inputPassword()
+                  ],
+                ),
+              ),
+              SizedBox(height: 50),
+              GestureDetector(
+                onTap: () {
+                  fullName = fullNameController.text;
+                  email = emailController.text;
+                  password = passwordController.text;
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          content: Container(
+                            height: 120,
+                            child: Column(
+                              children: [
+                                Text("¿Está seguro de registrarse?"),
+                                SizedBox(height: 10),
+                                Text("Tus datos son:"),
+                                SizedBox(height: 20),
+                                Column(children: [
+                                  Row(
+                                    children: [
+                                      Text("Nombre Completo:"),
+                                      Text(
+                                        fullName,
+                                        style: APTextStyle(context)
+                                            .textGlobal
+                                            .copyWith(fontSize: 19),
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text("Email:"),
+                                      Text(
+                                        email,
+                                        style: APTextStyle(context)
+                                            .textGlobal
+                                            .copyWith(fontSize: 19),
+                                      )
+                                    ],
+                                  ),
+                                ])
+                              ],
+                            ),
+                          ),
+                        );
+                      });
+                },
+                child: Container(
+                  width: 350,
+                  height: 52,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Colors.blueAccent),
+                  child: Center(
+                      child: Text("Registrar",
+                          style: APTextStyle(context)
+                              .textGlobal
+                              .copyWith(color: Colors.white, fontSize: 16))),
+                ),
+              ),
+              SizedBox(height: 50),
+              Padding(
+                padding: const EdgeInsets.only(left: 90),
+                child: Row(children: [
+                  Text("Alredy have an account?",
+                      style: APTextStyle(context).subTitleRegister),
+                  SizedBox(width: 5),
+                  Text("Login",
+                      style: APTextStyle(context)
+                          .textGlobal
+                          .copyWith(color: Colors.blueAccent, fontSize: 16))
+                ]),
               )
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget inputPassword() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Password",
+            style: APTextStyle(context).textGlobal.copyWith(fontSize: 15)),
+        SizedBox(height: 10),
+        Container(
+            width: 350,
+            height: 55,
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey, width: 1.5),
+                borderRadius: BorderRadius.circular(8)),
+            child: TextFormField(
+              obscureText: _isObscure,
+              validator: (String? value) {
+                return (value!.length < 8)
+                    ? "Su contraseña debe tener 8 dígitos"
+                    : null;
+              },
+              controller: passwordController,
+              decoration: InputDecoration(
+                  suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isObscure = !_isObscure;
+                        });
+                      },
+                      child: _isObscure
+                          ? Icon(Icons.visibility)
+                          : Icon(Icons.visibility_off)),
+                  hintText: "Enter your password",
+                  border: InputBorder.none,
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blueAccent)),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey.shade100)),
+                  hintStyle: GoogleFonts.nunito(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey)),
+            )),
+      ],
+    );
+  }
+
+  Widget inputEmail() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Email",
+            style: APTextStyle(context).textGlobal.copyWith(fontSize: 15)),
+        SizedBox(height: 10),
+        Container(
+            width: 350,
+            height: 53,
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8)),
+            child: TextFormField(
+              validator: (String? value) {
+                return (!value!.contains('@')) ? "Not is a valid emial" : null;
+              },
+              controller: emailController,
+              decoration: InputDecoration(
+                  hintText: "Enter your email",
+                  border: InputBorder.none,
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blueAccent)),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey.shade100)),
+                  hintStyle: APTextStyle(context)
+                      .textGlobal
+                      .copyWith(color: Colors.grey, fontSize: 15)),
+            )),
+      ],
+    );
+  }
+
+  Widget inputFullName() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Full Name",
+            style: APTextStyle(context).textGlobal.copyWith(fontSize: 15)),
+        SizedBox(height: 10),
+        Container(
+            width: 350,
+            height: 53,
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8)),
+            child: TextFormField(
+              validator: (String? value) {
+                return (value!.isEmpty) ? "No puede ser vacio" : null;
+              },
+              controller: fullNameController,
+              decoration: InputDecoration(
+                  hintText: "Enter your fullname",
+                  border: InputBorder.none,
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blueAccent)),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey.shade100)),
+                  hintStyle: APTextStyle(context)
+                      .textGlobal
+                      .copyWith(color: Colors.grey, fontSize: 15)),
+            )),
+      ],
     );
   }
 
@@ -134,3 +268,16 @@ class RegisterPage extends StatelessWidget {
         style: GoogleFonts.nunito(fontSize: 25, fontWeight: FontWeight.w500));
   }
 }
+
+
+//TAREA : CONSTRUIR UNA PANTALLA DE LOGIN DE USUARIO( INICIAR SESIÓN)
+
+// RECOMENDACIONES: 
+
+//CREAR VARIABLES
+//CREAR CONTROLADORES
+//UTILIZAR TEXTFORMFIELDS
+//VERIFICAR SI NUESTRO WIDGET LOGIN ES STATELESS O STATEFULL
+
+//CREAR BOTON " INICIAR SESION"
+  // MOSTRAR UNA ALERTA -  CON LAS VARIABLES UTILIZADAS
