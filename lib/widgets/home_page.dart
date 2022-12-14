@@ -24,8 +24,8 @@ class _HomePageState extends State<HomePage> {
     fullname = prefs.getString('fullname');
     print(fullname);
   }
-  //TAREA SHARED PREFERENCES: public
 
+  //TAREA SHARED PREFERENCES: public
   // MOSTRAR EL FULLNAME EN MAINDRAWER
 
   @override
