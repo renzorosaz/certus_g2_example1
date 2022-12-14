@@ -10,12 +10,22 @@ class APTextStyle {
         fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold);
   }
 
+  TextStyle get subTitleDrawer {
+    return GoogleFonts.nunito(
+        fontSize: 19, color: Colors.black, fontWeight: FontWeight.bold);
+  }
+
   TextStyle get titleAlertDialog {
     return GoogleFonts.nunito(
         fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold);
   }
 
   TextStyle get subTitleRegister {
+    return GoogleFonts.nunito(
+        fontWeight: FontWeight.w400, color: Colors.black, fontSize: 16);
+  }
+
+  TextStyle get subUnderTitleDrawer {
     return GoogleFonts.nunito(
         fontWeight: FontWeight.w400, color: Colors.black, fontSize: 16);
   }

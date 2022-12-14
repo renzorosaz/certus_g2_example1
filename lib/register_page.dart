@@ -6,6 +6,7 @@ import 'package:example_register/widgets/list/list_button_social_media.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/user_model.dart';
 
@@ -24,10 +25,13 @@ class _RegisterPageState extends State<RegisterPage> {
   final passwordController = TextEditingController();
 
   bool _isObscure = true;
+  //final Future<SharedPreferences> prefs = SharedPreferences.getInstance();
 
-  // String fullName = "";
-  // String email = ""; // ? no null si desean
-  // String password = "";
+  Future<void> guardarReferenciaUsuario(String fullname) async {
+    final prefs = await SharedPreferences.getInstance();
+    //guardar el valor del nombre completo
+    prefs.setString('fullname', fullname);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +70,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               SizedBox(height: 50),
               GestureDetector(
-                onTap: () {
+                onTap: () async {
                   UserModel user = UserModel("", "", "");
                   user.fullName = fullNameController.text;
                   user.email = emailController.text;
@@ -82,6 +86,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           );
                         });
                   } else {
+                    guardarReferenciaUsuario(user.fullName);
                     showDialog(
                         context: context,
                         barrierDismissible: false,
