@@ -1,6 +1,7 @@
 import 'package:example_register/utils/fonts.dart';
 import 'package:example_register/widgets/button/button_alert.dart';
 import 'package:example_register/widgets/button/button_alert_with_border.dart';
+import 'package:example_register/widgets/home_page.dart';
 import 'package:example_register/widgets/list/list_button_social_media.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -71,60 +72,85 @@ class _RegisterPageState extends State<RegisterPage> {
                   user.email = emailController.text;
                   user.password = passwordController.text;
 
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          content: Container(
-                            height: 200,
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  Text("¿Está seguro de registrarse?",
-                                      style: APTextStyle(context)
-                                          .titleAlertDialog),
-                                  SizedBox(height: 10),
-                                  Text("Tus datos son:"),
-                                  SizedBox(height: 20),
-                                  Column(children: [
+                  if (user.fullName.isEmpty) {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Container(
+                                child: Text("Ingrese su nombre completo")),
+                          );
+                        });
+                  } else {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Container(
+                              height: 200,
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    Text("¿Está seguro de registrarse?",
+                                        style: APTextStyle(context)
+                                            .titleAlertDialog),
+                                    SizedBox(height: 10),
+                                    Text("Tus datos son:"),
+                                    SizedBox(height: 20),
+                                    Column(children: [
+                                      Row(
+                                        children: [
+                                          Text("Nombre Completo:"),
+                                          Text(
+                                            user.fullName,
+                                            style: APTextStyle(context)
+                                                .textGlobal
+                                                .copyWith(fontSize: 19),
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text("Email:"),
+                                          Text(
+                                            user.email,
+                                            style: APTextStyle(context)
+                                                .textGlobal
+                                                .copyWith(fontSize: 19),
+                                          )
+                                        ],
+                                      ),
+                                    ]),
+                                    SizedBox(height: 20),
                                     Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text("Nombre Completo:"),
-                                        Text(
-                                          user.fullName,
-                                          style: APTextStyle(context)
-                                              .textGlobal
-                                              .copyWith(fontSize: 19),
+                                        ButtonAlert(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        HomePage()));
+                                          },
+                                        ),
+                                        ButtonAlertWithBorder(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
                                         )
                                       ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text("Email:"),
-                                        Text(
-                                          user.email,
-                                          style: APTextStyle(context)
-                                              .textGlobal
-                                              .copyWith(fontSize: 19),
-                                        )
-                                      ],
-                                    ),
-                                  ]),
-                                  SizedBox(height: 20),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      ButtonAlert(),
-                                      ButtonAlertWithBorder()
-                                    ],
-                                  )
-                                ],
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      });
+                          );
+                        });
+                  }
                 },
                 child: Container(
                   width: 350,
